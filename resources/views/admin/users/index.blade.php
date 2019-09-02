@@ -22,9 +22,10 @@
             <th>ID</th>
             <th>Name</th>
             <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
             <th>Created</th>
             <th>Updated</th>
-            <th>Salary</th>
           </tr>
         </thead>
         <tfoot>
@@ -32,9 +33,10 @@
             <th>ID</th>
             <th>Name</th>
             <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
             <th>Created</th>
             <th>Updated</th>
-            <th>Salary</th>
           </tr>
         </tfoot>
         <tbody>
@@ -45,9 +47,10 @@
             <td>{{$user->id}}</td>
             <td>{{$user->name}}</td>
             <td>{{$user->email}}</td>
+            <td>{{$user->role->name}}</td>
+            <td>{{$user->status == 1 ? 'Active' : 'Inactive'}}</td>
             <td>{{$user->created_at->diffForHumans()}}</td>
             <td>{{$user->updated_at->diffForHumans()}}</td>
-            <td>$320,800</td>
           </tr>
           <tr>
             <td>Michael Bruce</td>
@@ -55,6 +58,7 @@
             <td>Singapore</td>
             <td>29</td>
             <td>2011/06/27</td>
+            <td>$183,000</td>
             <td>$183,000</td>
           </tr>
           <tr>
@@ -64,6 +68,7 @@
             <td>27</td>
             <td>2011/01/25</td>
             <td>$112,000</td>
+            <td>$183,000</td>
           </tr>
           @endforeach
           @endif
