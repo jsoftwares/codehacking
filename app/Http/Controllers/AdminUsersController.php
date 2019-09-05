@@ -8,6 +8,7 @@ use App\Http\Requests\UsersRequest;
 use App\Http\Requests;
 use App\User;
 use App\Role;
+use App\Photo;
 
 
 class AdminUsersController extends Controller
@@ -48,7 +49,17 @@ class AdminUsersController extends Controller
     {
         //
         // return $request->all();
-        User::create($request->all());
+        $input = $request->all();
+        //If in the form post request, there is value for a file element with name 'photo' then
+        if ($file = $request->file('photo_id')) {
+            $name = time() . $file->getClientOriginalName();
+            $file->move('images', $name);
+            $photo = Photo::create(['file'=>$name]);
+            $input['photo_id'] = $photo->id; //after putting file in photos table, we set its value in the form post request
+        }
+        //If no photo was attacahed, then
+        $input['password'] = bcrypt($request->password);
+        User::create($input);
         return redirect('admin/users');
     }
 
