@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\UsersRequest;
+use App\Http\Requests\UsersEditRequest;
 
 use App\Http\Requests;
 use App\User;
@@ -48,8 +49,12 @@ class AdminUsersController extends Controller
     public function store(UsersRequest $request)
     {
         //
-        // return $request->all();
-        $input = $request->all();
+        //We check if password field is empty so as not to include it in the post request
+        if (trim($request->password == '')) {
+            $input = $request->except('password');
+        }else {
+            $input = $request->all();
+        }
         //If in the form post request, there is value for a file element with name 'photo' then
         if ($file = $request->file('photo_id')) {
             $name = time() . $file->getClientOriginalName();
@@ -83,6 +88,9 @@ class AdminUsersController extends Controller
     public function edit($id)
     {
         //
+        $user = User::findOrFail($id);
+        $roles = Role::lists('name', 'id')->all();
+        return view('admin.users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -92,9 +100,34 @@ class AdminUsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UsersEditRequest $request, $id)
     {
         //
+        $user = User::findOrFail($id);
+
+        //We check if password field is empty so as not to include it in the post request
+        if (trim($request->password == '')) {
+            $input = $request->except('password');
+        }else {
+            $input = $request->all();
+        }
+
+        if ($file = $request->file('photo_id')) {
+            $name = time() . $file->getClientOriginalName();
+            $file->move('images', $name);
+            if ($user->photo_id != null) {
+                $photo = $user->photo()->update(['file'=>$name]);
+                $input['photo_id'] = $user->photo->id;
+            }else {
+                $photo = Photo::create(['file'=>$name]);
+                $input['photo_id'] = $photo->id;
+            }
+            
+        }
+        
+        $input['password'] = bcrypt($request->password);
+         $user->update($input);
+         return redirect('admin/users');
     }
 
     /**
