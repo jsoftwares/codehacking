@@ -10,7 +10,7 @@ use App\Http\Requests;
 use App\User;
 use App\Role;
 use App\Photo;
-
+use Illuminate\Support\Facades\Session;
 
 class AdminUsersController extends Controller
 {
@@ -106,10 +106,11 @@ class AdminUsersController extends Controller
         $user = User::findOrFail($id);
 
         //We check if password field is empty so as not to include it in the post request
-        if (trim($request->password == '')) {
+        if (trim(!$request->has('password'))) {
             $input = $request->except('password');
         }else {
             $input = $request->all();
+            $input['password'] = bcrypt($request->password);
         }
 
         if ($file = $request->file('photo_id')) {
@@ -125,9 +126,9 @@ class AdminUsersController extends Controller
             
         }
         
-        $input['password'] = bcrypt($request->password);
+        // $input['password'] = bcrypt($request->password);
          $user->update($input);
-         return redirect('admin/users');
+         return redirect('/admin/users');
     }
 
     /**
@@ -139,5 +140,11 @@ class AdminUsersController extends Controller
     public function destroy($id)
     {
         //
+        $user = User::findOrFail($id);
+        unlink(public_path() . $user->photo->file);
+        $user->photo->delete();
+        $user->delete();
+        Session::flash('deleted_user', 'User Deleted!');
+        return redirect('admin/users');
     }
 }

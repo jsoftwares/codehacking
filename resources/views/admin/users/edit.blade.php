@@ -40,9 +40,15 @@
                     {!! Form::password('password', ['class'=>'form-control form-control-user', 'id'=>'exampleInputPassword', 'placeholder'=>'Password']) !!}
                 </div>
               <div class="form-group">
-                {!! Form::submit('Create User', ['class'=>'btn btn-primary btn-user btn-block']) !!}
+                {!! Form::submit('Update User', ['class'=>'btn btn-primary btn-user btn-block col-sm-6']) !!}
               </div>
-              
+              {!! Form::close() !!}
+
+              <!-- DELETE FORM -->
+              {!! Form::open(['method'=>'DELETE', 'action'=>['AdminUsersController@destroy', $user->id], 'class'=>'user']) !!}
+              <div class="form-group">
+                {!! Form::submit('Delete User', ['class'=>'btn btn-danger btn-user btn-block col-sm-6']) !!}
+              </div>
               {!! Form::close() !!}
                 <hr>
             </div>
