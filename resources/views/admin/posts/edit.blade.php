@@ -28,11 +28,17 @@
                     {!! Form::textarea('body', null, ['class'=>'form-control', 'id'=>'exampleInputPassword']) !!}
                 </div>
               <div class="form-group">
-                {!! Form::submit('Update Post', ['class'=>'btn btn-primary btn-user btn-block']) !!}
+                {!! Form::submit('Update Post', ['class'=>'btn btn-primary btn-user btn-block col-sm-6']) !!}
               </div>
-              
               {!! Form::close() !!}
-                </div>
+
+              <!-- DELETE FORM -->
+              {!! Form::open(['method'=>'DELETE', 'action'=>['AdminPostsController@destroy', $post->id], 'class'=>'user']) !!}
+              <div class="form-group">
+                {!! Form::submit('Delete Post', ['class'=>'btn btn-danger btn-user btn-block col-sm-6']) !!}
+              </div>
+              {!! Form::close() !!}
+              </div>
           </div>
         </div>
       </div>
