@@ -62,7 +62,7 @@ class AdminUsersController extends Controller
             $photo = Photo::create(['file'=>$name]);
             $input['photo_id'] = $photo->id; //after putting file in photos table, we set its value in the form post request
         }
-        //If no photo was attacahed, then
+        //If no photo was attached, then
         $input['password'] = bcrypt($request->password);
         User::create($input);
         return redirect('admin/users');
@@ -114,6 +114,7 @@ class AdminUsersController extends Controller
         }
 
         if ($file = $request->file('photo_id')) {
+            unlink(public_path() . $user->photo->file); //if new photo is added, delete exiting photo from images
             $name = time() . $file->getClientOriginalName();
             $file->move('images', $name);
             if ($user->photo_id != null) {
