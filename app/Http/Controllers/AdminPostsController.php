@@ -95,14 +95,12 @@ class AdminPostsController extends Controller
     {
         //Since we have 'image_id' as foreign key in post rather than the convention 'post_id'
         //Rem to add image_id as 2nd parameter in the relationship in Post model
-        //whereId($post->image_id)->first()->
-        //$user = Auth::user();
+
         $post = Post::findOrFail($id);
-        //return $post->photo;
         if ($file = $request->file('image_id')) {//If there is a value for the file field
-        //    if (public_path(). $post->photo->file != null) {
-        //         unlink(public_path() . $post->photo->file); //delete exiting image from images
-        //    }
+           if (public_path(). $post->photo->file != null) {
+                unlink(public_path() . $post->photo->file); //delete exiting image from images
+           }
             $name = time() . $file->getClientOriginalName();
             $file->move('images', $name);
             $post->photo->update(['file'=>$name]);
